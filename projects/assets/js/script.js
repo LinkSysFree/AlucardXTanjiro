@@ -16,9 +16,12 @@ let isDocumentHidden = false;
 let like_time_second = 3;
 let share_time_second = 5;
 let subscribe_time_second = 4;
-let watch_time_minutes = 10;
+let watch_time_minutes = 10;//totalsecondsinminute * minutes
 
-let window_to_watch = "https://youtu.be/62hfF8fH3_k?si=zeBKWAffDTtz_zE3";
+let window_to_watch = "https://youtu.be/62hfF8fH3_k?si=zeBKWAffDTtz_zE3";//link of the video
+
+let name_of_zip = "AlucardXTanjiro.zip";
+let filepath_zip = "projects/assets/download_zip/"+name_of_zip;
 
 //-----------------
 let totalSeconds = 0;
@@ -36,17 +39,17 @@ document.addEventListener('visibilitychange', function() {
 });
 
 function startTimer() {
-    let totalSeconds = 0;
-    const timerInterval = setInterval(() => {
-      if (!isDocumentHidden) {
-        minutes = Math.floor(totalSeconds / 60);
-        seconds = totalSeconds % 60;
-        totalSeconds++;
-        // Add your code to handle tasks completion based on totalSeconds and identifier here
-    } else {
-      clearInterval(timerInterval);
-    }
-        
+    totalSeconds = 0; // Initialize globally
+    timerInterval = setInterval(() => {
+        if (!isDocumentHidden) {
+            minutes = Math.floor(totalSeconds / 60);
+            seconds = totalSeconds % 60;
+            totalSeconds++; // Increment the global variable
+            // Your existing task completion logic here...
+        } else {
+            clearInterval(timerInterval);
+        }
+  
         // Check identifier inside the setInterval callback
         // If executed then Like is done
         if (totalSeconds >= like_time_second && (identifier === 'like')) {
@@ -220,8 +223,8 @@ function downloadZip() {
 
   var link = document.createElement("a");
 
-    link.href = "projects/assets/download_zip/Aldous%20X%20Saitama.zip";
-    link.download = "Aldous X Saitama.zip";
+  link.href = filepath_zip;//location of zip
+  link.download = name_of_zip;
 
   document.body.appendChild(link);
   link.click();
