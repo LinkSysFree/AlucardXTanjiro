@@ -15,45 +15,61 @@ let isDocumentHidden = false;
 //Time defined for Like, Share, Subscribe and watch video
 let like_time_second = 3;
 let share_time_second = 5;
-let subscribe_time_second = 4;
-let watch_time_minutes = 10;//totalsecondsinminute * minutes
+let subscribe_time_second = 3;
+let watch_time_minutes = 8;//secondsinminute * minutes
 
 let window_to_watch = "https://youtu.be/62hfF8fH3_k?si=zeBKWAffDTtz_zE3";//link of the video
+
+let main_Panel_Link = "https://linksysfree.github.io/Unlock_Link/";
 
 let name_of_zip = "AlucardXTanjiro.zip";
 let filepath_zip = "projects/assets/download_zip/"+name_of_zip;
 
 //-----------------
-let totalSeconds = 0;
-        let minutes = 0;
-        let seconds = 0;
+let minutes = 0;
+let seconds = 0;
 
+let ms = 0;
+
+let startCounting = true;
+
+//checks if the user is on the website=false and not_on_website=true
 document.addEventListener('visibilitychange', function() {
     if (document.visibilityState === 'hidden') {
       isDocumentHidden = false;
-      startTimer(); // Resume the timer
+      if(startCounting){
+        startTimer(); // Resume the timer
+      }
     } else {
         isDocumentHidden = true;
-        clearInterval(timerInterval); // Pause the timer
+        printLastTimeRecorded();
+        stopTime(); // Pause the timer
     }
 });
 
-function startTimer() {
-    totalSeconds = 0; // Initialize globally
+function startTimer(ms) {
     timerInterval = setInterval(() => {
-        if (!isDocumentHidden) {
-            minutes = Math.floor(totalSeconds / 60);
-            seconds = totalSeconds % 60;
-            totalSeconds++; // Increment the global variable
-            // Your existing task completion logic here...
-        } else {
-            clearInterval(timerInterval);
+      if (!isDocumentHidden) {
+        if(startCounting){
+          seconds = seconds+1; // Increment the global variable
+          if(seconds == 60){
+            minutes++;
+            seconds = 0;
+          }  
         }
-  
+          printLastTimeRecorded(); // Move this here to log updated values
+      } else {
+          printLastTimeRecorded();
+          stopTime();
+          if(!startCounting){
+            startCounting = true;
+          }
+      }
         // Check identifier inside the setInterval callback
         // If executed then Like is done
-        if (totalSeconds >= like_time_second && (identifier === 'like')) {
-            clearInterval(timerInterval);
+        if (seconds >= like_time_second && (identifier === 'like')) {
+            printLastTimeRecorded();
+            stopTime();
 
             likeButtonA.style.backgroundColor = 'green';
             likeButtonA.style.color = 'black';
@@ -67,7 +83,7 @@ function startTimer() {
             progressBtn.style.transition = 'background-image 0.3s ease'; // Adjust the duration and timing function as needed
 
             progressBtn.textContent = 'Unlock Progress 1/4'; 
-            tellerText.textContent = 'Do: Share the Video';
+            tellerText.innerHTML = '<div class="teller">Do: <div class="underlined" id="tellerTextID">Share the Video</div></div>';
             
             //must disabled
             likeButtonA.disabled = true;
@@ -78,8 +94,9 @@ function startTimer() {
         }   
       
         // If executed then Share is done
-        if (totalSeconds >= share_time_second && (identifier === 'share')) {
-            clearInterval(timerInterval);
+        if (seconds >= share_time_second && (identifier === 'share')) {
+            printLastTimeRecorded();
+            stopTime();
           
             shareButtonA.style.backgroundColor = 'green';
             shareButtonA.style.color = 'black';
@@ -93,7 +110,7 @@ function startTimer() {
             // Progress update
             progressBtn.style.backgroundImage = 'linear-gradient(to right, gray 50%, black 50%)';        
             progressBtn.textContent = 'Unlock Progress 2/4';       
-            tellerText.textContent = 'Do: Subscribe my Channel';
+            tellerText.innerHTML = '<div class="teller">Do: <div class="underlined" id="tellerTextID">Subscribe my channel</div></div>';
 
             //must disabled
             likeButtonA.disabled = true;
@@ -104,8 +121,9 @@ function startTimer() {
         }
 
         // If executed then Subscribe is done
-        if (totalSeconds >= subscribe_time_second && (identifier === 'subscribe')) {
-            clearInterval(timerInterval);
+        if (seconds >= subscribe_time_second && (identifier === 'subscribe')) {
+            printLastTimeRecorded();
+            stopTime();
           
             subsButtonA.style.backgroundColor = 'green';
             subsButtonA.style.color = 'black';
@@ -119,8 +137,8 @@ function startTimer() {
             progressBtn.style.transition = 'background-image 0.3s ease'; // Adjust the duration and timing function as needed
 
             progressBtn.textContent = 'Unlock Progress 3/4';      
-
-            tellerText.innerHTML = 'Do: Watch Video <br> Watch Time Needed: 10 : 00  Minutes<br>(Do Watch the Video Straight or it will restart)';
+            
+            tellerText.innerHTML = '<div class="teller">Do: <div class="underlined" id="tellerTextID">Watch Time Needed: '+(watch_time_minutes + 2)+' : 00  Minutes<br>(Do Watch the Video Straight or it will restart)</div></div>'; 
 
             //enabling the next Task
             //must disabled
@@ -134,38 +152,67 @@ function startTimer() {
         // If executed then Youtube Watch is done LASTLY
         // Depends on how much time the video is
         if (minutes >= watch_time_minutes && (identifier === 'watch')) {
-            clearInterval(timerInterval);
-          
+            printLastTimeRecorded();
+            stopTime();
+           
             watchButtonA.style.backgroundColor = 'green';
             watchButtonA.style.color = 'black';
             
             // Progress update
             progressBtn.style.backgroundImage = 'linear-gradient(to right, gray 100%, black 0%)';
             progressBtn.textContent = 'Completed Task 4/4';
+
+            tellerText.innerHTML = '<div class="teller">Successfully Completed All Task: <div class="underlined" id="tellerTextID">You can now Download the Script Below</div></div>'; 
+
             
             document.querySelector('.download_button').style.backgroundColor = 'green';
             document.querySelector('.download_button').disabled = false; // Corrected disabled property
             document.querySelector('.download_button').cursor = 'pointer';
         }
-        console.clear();
-        console.log(minutes + ' : ' + seconds);
-    }, 1000);
+
+        printLastTimeRecorded();
+    }, ms);
+}
+
+
+function printLastTimeRecorded(){
+  if(startCounting){
+    if(isDocumentHidden){
+      console.clear();
+      console.log(minutes+ ":" +seconds);
+     } else {
+      clearInterval(timerInterval);
+     }
+  }
+}
+
+function stopTime(){
+  clearInterval(timerInterval);
+  startCounting = false;
+}
+
+function resetTime(){
+  minutes = 0;
+  seconds = 0;
 }
 
 function linkForLikeShareWatch(){
   if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-      window.open(window_to_watch);//aldousXsaitama
+      window.open(window_to_watch);//yt link
 } else {
-    window.open(window_to_watch, "_blank");//aldousXsaitama   
+    window.open(window_to_watch, "_blank");//yt link   
 }
 }
 
 // Like function
 function redirectToYtToLike() {
+    startCounting = true;
 
+    resetTime();
     linkForLikeShareWatch();
     identifier = 'like';
-    startTimer();
+    ms = 1000; //millisecond
+    startTimer(ms);
     
     checker = 'doneLike';
 }
@@ -173,10 +220,14 @@ function redirectToYtToLike() {
 // Share function
 function redirectToYtToShare() {
   if(checker === 'doneLike'){
+    startCounting = true;
+
+    resetTime();
     linkForLikeShareWatch();
 
+    ms = 999999999;//millisecond
     identifier = 'share';
-    startTimer();
+    startTimer(ms);
 
     checker = 'doneShare';
   }
@@ -185,9 +236,14 @@ function redirectToYtToShare() {
 // Subscribe function
 function redirectToYtToSubscribe() {
   if(checker === 'doneShare'){
+    startCounting = true;
+
+    resetTime();
    window.open('https://www.youtube.com/@dream_mlbb');
     identifier = 'subscribe';
-    startTimer();
+    
+    ms = 999999999;
+    startTimer(ms);
 
     checker = 'doneSubscribe';
   }
@@ -196,17 +252,16 @@ function redirectToYtToSubscribe() {
 // Watch function
 function redirectToYtToWatch() {
   if(checker === 'doneSubscribe'){
+   startCounting = true;
+
+    resetTime();
     linkForLikeShareWatch();
 
     identifier = 'watch';
-    startTimer();
+
+    ms = 999999999;
+    startTimer(ms);
   }
-}
-
-
-//subscribe
-function subscribe() {
-  window.open('https://www.youtube.com/@dream_mlbb');
 }
 
 //-------------------------------------------------------------------
@@ -215,7 +270,7 @@ let selectionPanel = document.querySelector('.selection');
 let backBtn = document.querySelector('.back');
 
 function backToMainPanel(){
-  window.location.href = "https://linksysfree.github.io/Unlock_Link/";
+  window.location.href = main_Panel_Link;//main_Panel_Link
 }
 
 // Download Zip function

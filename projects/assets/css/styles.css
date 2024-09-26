@@ -28,6 +28,16 @@ body{
   h2 {
    margin-left: 40px;
   }
+
+  .warning{
+    text-align: center;
+   color: rgb(255, 17, 17);
+  }
+
+  .underlined{
+    text-decoration: underline;
+    color: rgb(22, 8, 177);
+  }
   
   /* Optional: Style the buttons */
   .like_button, .share_button, .subscribe_button, .watch_button {
@@ -86,6 +96,7 @@ body{
 
   .teller {
     text-align: center;
+    color: rgb(33, 105, 12);
   }
 
   /*Header*/
