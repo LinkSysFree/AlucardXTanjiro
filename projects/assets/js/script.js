@@ -22,11 +22,11 @@ let watch_time_minutes = 60 * assigned_minutes;//secondsinminute * minutes
 
 //-----------------------------------------------
 
-let window_to_watch = "https://youtu.be/GsEjf0oxH-c?si=lVb0RXEWpMGruyqx";//link of the video
+let window_to_watch = "https://youtu.be/62hfF8fH3_k?si=jKm2ZFw0qmiFhT9W";//link of the video
 
 let main_Panel_Link = "https://linksysfree.github.io/Unlock_Link/";
 
-let name_of_zip = "AldousXSaitama.zip";
+let name_of_zip = "AlucardXTanjiro.zip";
 let filepath_zip = "projects/assets/download_zip/"+name_of_zip;
 
 //-----------------
